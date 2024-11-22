@@ -6,7 +6,7 @@ using namespace std;
 Simulation* backup = nullptr;
 
 int main(int argc, char** argv){
-     cout << "koosdodashfegerggergeli" << endl;
+     cout << "yes" << endl;
     if(argc!=2){
         cout << "usage: simulation <config_path>" << endl;
         return 0;
