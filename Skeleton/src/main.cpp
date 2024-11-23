@@ -14,8 +14,8 @@ int main(int argc, char** argv){
     Simulation simulation(configurationFile);
     simulation.start();
     if(backup!=nullptr){
-    	delete backup;
-    	backup = nullptr;
+        delete backup;
+        backup = nullptr;
     }
     return 0;
 }

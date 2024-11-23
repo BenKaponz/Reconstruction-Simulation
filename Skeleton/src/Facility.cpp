@@ -1,23 +1,15 @@
 #include "Facility.h"
+using namespace std;
 
 //Constructor
 FacilityType::FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score)
     : name(name), category(category), price(price), lifeQuality_score(lifeQuality_score), economy_score(economy_score), environment_score(environment_score) {}
 
 // Copy Constructor
-FacilityType::FacilityType(const FacilityType &other)
-    : name(other.name), category(other.category), price(other.price), lifeQuality_score(other.lifeQuality_score), economy_score(other.economy_score), environment_score(other.environment_score) {}
+FacilityType::FacilityType(const FacilityType &other) : name(other.name), category(other.category), price(other.price), lifeQuality_score(other.lifeQuality_score), economy_score(other.economy_score), environment_score(other.environment_score) {}
 
 // Copy Assignment Operator
 FacilityType &FacilityType::operator=(const FacilityType &other) {
-    if (this != &other) {
-        name = other.name;
-        category = other.category;
-        price = other.price;
-        lifeQuality_score = other.lifeQuality_score;
-        economy_score = other.economy_score;
-        environment_score = other.environment_score;
-    }
     return *this;
 }
 
@@ -54,7 +46,7 @@ FacilityCategory FacilityType::getCategory() const
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-
+//1st Constructor
 Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score)
     : FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score), 
       settlementName(settlementName), 
@@ -62,7 +54,7 @@ Facility::Facility(const string &name, const string &settlementName, const Facil
       timeLeft(price) 
 {
 }
-
+//2nd Constructor 
 Facility::Facility(const FacilityType &type, const string &settlementName)
     : FacilityType(type), 
       settlementName(settlementName), 
@@ -104,7 +96,7 @@ const FacilityStatus &Facility::getStatus() const
 
 const string Facility::toString() const
 {
-    return "Facility: " + name + ", Settlement: " + settlementName + 
+    return "Facility: " + getName()  + ", Settlement: " + settlementName + 
            ", Status: " + (status == FacilityStatus::OPERATIONAL ? "Operational" : "Under Construction") + 
-           ", Time Left: " + std::to_string(timeLeft);
+           ", Time Left: " + to_string(timeLeft);
 }
