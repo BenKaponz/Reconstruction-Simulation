@@ -16,11 +16,10 @@ Settlement::Settlement(const Settlement &other)
 
 // Copy Assignment Operator
 Settlement &Settlement::operator=(const Settlement &other) {
-    if (this == &other) {
-        return *this; // Handle self-assignment
-    }   
-    // לבדוק מה קורה עם השם ד
-    type = other.type;
+    if (this != &other) {
+        name = other.name;
+        type = other.type;
+    }
     return *this;
 }
 
@@ -31,7 +30,7 @@ Settlement::~Settlement() {
 
 
 SettlementType Settlement::getType() const{
-    return SettlementType();
+    return SettlementType;
 }
 
 const string Settlement::toString() const{
@@ -41,4 +40,4 @@ const string Settlement::toString() const{
 const string &Settlement::getName() const{
     return name;
 }
-
+cout<<s<<endl;
