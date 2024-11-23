@@ -40,4 +40,3 @@ const string Settlement::toString() const{
 const string &Settlement::getName() const{
     return name;
 }
-cout<<s<<endl;
