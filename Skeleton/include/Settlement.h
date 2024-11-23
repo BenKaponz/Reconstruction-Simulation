@@ -4,7 +4,6 @@
 using std::string;
 using std::vector;
 
-class Facility;
 
 enum class SettlementType {
     VILLAGE,
