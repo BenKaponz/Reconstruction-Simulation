@@ -85,6 +85,7 @@ FacilityStatus Facility::step()
 {
     if (status == FacilityStatus::UNDER_CONSTRUCTIONS && timeLeft > 0) {
         sout << "Hello" << endl;
+        cout << "Hello" << endl;cout << "Hello" << endl;
         timeLeft--;
         if (timeLeft == 0) {
             status = FacilityStatus::OPERATIONAL;
