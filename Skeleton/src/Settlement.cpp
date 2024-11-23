@@ -19,7 +19,7 @@ Settlement &Settlement::operator=(const Settlement &other) {
     if (this == &other) {
         return *this; // Handle self-assignment
     }   
-    // לבדוק מה קורה עם השם 
+    // לבדוק מה קורה עם השם ד
     type = other.type;
     return *this;
 }
