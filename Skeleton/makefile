@@ -1,34 +1,32 @@
 # Please implement your Makefile rules and targets below.
 # Customize this file to define how to build your project.
-# Please implement your Makefile rules and targets below.
-# Customize this file to define how to build your project.
-# Compiler
-CXX = g++
 
-# Compiler flags
-CXXFLAGS = -std=c++11 -Wall -Wextra -pedantic
 
-# Target executable
-TARGET = settlement_test
 
-# Source files
-SRCDIR = src
-SOURCES = $(SRCDIR)/main.cpp $(SRCDIR)/Settlement.cpp
+# All Targets
+all: program
 
-# Object files
-OBJECTS = $(SOURCES:.cpp=.o)
+# Tool invocations
+# Executable "program" depends on the object files main.o, Settlement.o, and Facility.o.
+program: bin/main.o bin/Settlement.o bin/Facility.o
+	@echo 'Building target: program'
+	@echo 'Invoking: C++ Linker'
+	g++ -o bin/program bin/main.o bin/Settlement.o bin/Facility.o
+	@echo 'Finished building target: program'
+	@echo ' '
 
-# Header files directory
-INCDIR = include
+# Compile main.cpp into an object file
+bin/main.o: src/main.cpp
+	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/main.o src/main.cpp
 
-# Build the target executable
-$(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -I$(INCDIR) -o $@ $^
+# Compile Settlement.cpp into an object file
+bin/Settlement.o: src/Settlement.cpp
+	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Settlement.o src/Settlement.cpp
 
-# Build object files
-$(SRCDIR)/%.o: $(SRCDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -I$(INCDIR) -c $< -o $@
+# Compile Facility.cpp into an object file
+bin/Facility.o: src/Facility.cpp
+	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Facility.o src/Facility.cpp
 
-# Clean build files
+# Clean the build directory
 clean:
-	rm -f $(SRCDIR)/*.o $(TARGET)
+	rm -f bin/*

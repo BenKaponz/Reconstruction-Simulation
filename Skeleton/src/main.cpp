@@ -1,30 +1,40 @@
-
+#include "Simulation.h"
+#include "Facility.h"
 #include <iostream>
-#include "Settlement.h"
 
 using namespace std;
 
+
 int main() {
-    // יצירת אובייקטים מסוג Settlement
-    Settlement village("KfarSP", SettlementType::VILLAGE);
-    Settlement city("TelSP", SettlementType::CITY);
-    Settlement metropolis("SPopolis", SettlementType::METROPOLIS);
+    // Test Settlement class
+    cout << "Testing Settlement Class:" << endl;
+    Settlement settlement("Sample Town", SettlementType::CITY);
+    cout << settlement.toString() << endl;
 
-    // הדפסת פרטי היישובים
-    cout << "Settlement Details:" << endl;
+    // Test FacilityType class
+    cout << "\nTesting FacilityType Class:" << endl;
+    FacilityType school("School", FacilityCategory::LIFE_QUALITY, 100, 50, 10, 20);
+    cout << "Facility Type Name: " << school.getName() << endl;
+    cout << "Category: " << (school.getCategory() == FacilityCategory::LIFE_QUALITY ? "Life Quality" : "Other") << endl;
+    cout << "Cost: " << school.getCost() << endl;
+    cout << "Life Quality Score: " << school.getLifeQualityScore() << endl;
+    cout << "Economy Score: " << school.getEconomyScore() << endl;
+    cout << "Environment Score: " << school.getEnvironmentScore() << endl;
 
-    cout << "Name: " << village.getName() 
-         << ", Type: " << (village.getType() == SettlementType::VILLAGE ? "Village" : "Unknown") 
-         << endl;
+    // Test Facility class
+    cout << "\nTesting Facility Class:" << endl;
+    Facility facility(school, "Sample Town");
+    cout << facility.toString() << endl;
 
-    cout << "Name: " << city.getName() 
-         << ", Type: " << (city.getType() == SettlementType::CITY ? "City" : "Unknown") 
-         << endl;
+    cout << "\nSimulating Construction:" << endl;
+    while (facility.getStatus() != FacilityStatus::OPERATIONAL) {
+        facility.step();
+        cout << facility.toString() << endl;
+    }
 
-    cout << "Name: " << metropolis.getName() 
-         << ", Type: " << (metropolis.getType() == SettlementType::METROPOLIS ? "Metropolis" : "Unknown") 
-         << endl;
+    cout << "\nFinal Facility State:" << endl;
+    cout << facility.toString() << endl;
 
-cout << "hiii" << endl;
     return 0;
-}
+    }
+    

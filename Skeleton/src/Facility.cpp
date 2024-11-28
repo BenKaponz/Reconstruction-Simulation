@@ -1,44 +1,42 @@
 #include "Facility.h"
 using namespace std;
 
-//Constructor
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ************************************************* FacilityType ***************************************************** //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 FacilityType::FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score)
     : name(name), category(category), price(price), lifeQuality_score(lifeQuality_score), economy_score(economy_score), environment_score(environment_score) {}
 
-const string &FacilityType::getName() const
-{
+const string &FacilityType::getName() const {
     return name;
 }
 
-int FacilityType::getCost() const
-{
+int FacilityType::getCost() const {
     return price;
 }
 
-int FacilityType::getLifeQualityScore() const
-{
+int FacilityType::getLifeQualityScore() const {
     return lifeQuality_score;
 }
 
-int FacilityType::getEnvironmentScore() const
-{
+int FacilityType::getEnvironmentScore() const {
     return environment_score;
 }
 
-int FacilityType::getEconomyScore() const
-{
+int FacilityType::getEconomyScore() const {
     return economy_score;
 }
 
-FacilityCategory FacilityType::getCategory() const
-{
+FacilityCategory FacilityType::getCategory() const {
     return category;
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ************************************************** Facility ******************************************************** //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//1st Constructor
 Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score)
     : FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score), 
       settlementName(settlementName), 
@@ -46,7 +44,7 @@ Facility::Facility(const string &name, const string &settlementName, const Facil
       timeLeft(price) 
 {
 }
-//2nd Constructor 
+
 Facility::Facility(const FacilityType &type, const string &settlementName)
     : FacilityType(type), 
       settlementName(settlementName), 
@@ -55,18 +53,15 @@ Facility::Facility(const FacilityType &type, const string &settlementName)
 {
 }
 
-const string &Facility::getSettlementName() const
-{
+const string &Facility::getSettlementName() const {
     return settlementName;
 }
 
-const int Facility::getTimeLeft() const
-{
+const int Facility::getTimeLeft() const {
     return timeLeft;
 }
 
-FacilityStatus Facility::step()
-{
+FacilityStatus Facility::step() {
     if (status == FacilityStatus::UNDER_CONSTRUCTIONS && timeLeft > 0) {
         timeLeft--;
         if (timeLeft == 0) {
@@ -76,18 +71,15 @@ FacilityStatus Facility::step()
     return status;
 }
 
-void Facility::setStatus(FacilityStatus newStatus)
-{
+void Facility::setStatus(FacilityStatus newStatus) {
     status = newStatus;
 }
 
-const FacilityStatus &Facility::getStatus() const
-{
+const FacilityStatus &Facility::getStatus() const {
     return status;
 }
 
-const string Facility::toString() const
-{
+const string Facility::toString() const {
     return "Facility: " + getName()  + ", Settlement: " + settlementName + 
            ", Status: " + (status == FacilityStatus::OPERATIONAL ? "Operational" : "Under Construction") + 
            ", Time Left: " + to_string(timeLeft);
