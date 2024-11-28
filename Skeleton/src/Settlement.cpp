@@ -9,25 +9,10 @@ Settlement::Settlement(const string &name, SettlementType type)
     : name(name), type(type) {
 }
 
-// // Copy Constructor
-// Settlement::Settlement(const Settlement &other)
-//     : name(other.name), type(other.type) {
-// }
-
-// // Copy Assignment Operator
-// Settlement &Settlement::operator=(const Settlement &other) {
-//     if (this != &other) {
-//         name = other.name;
-//         type = other.type;
-//     }
-//     return *this;
-// }
-
-// // Destructor
-// Settlement::~Settlement() {
-// }
-
-
+// Copy Constructor
+Settlement::Settlement(const Settlement &other)
+    : name(other.name), type(other.type) {
+}
 
 SettlementType Settlement::getType() const{
     return SettlementType;
