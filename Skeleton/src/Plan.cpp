@@ -24,7 +24,6 @@ Plan::~Plan() {
     for (auto facility : underConstruction) {
         delete facility;
     }
-
 }
 
 const int Plan::getlifeQualityScore() const {
