@@ -24,7 +24,7 @@ Plan::~Plan() {
     for (auto facility : underConstruction) {
         delete facility;
     }
-    delete selectionPolicy;
+
 }
 
 const int Plan::getlifeQualityScore() const {
