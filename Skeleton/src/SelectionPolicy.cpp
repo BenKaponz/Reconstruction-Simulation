@@ -1,6 +1,7 @@
 #include "SelectionPolicy.h"
 #include <algorithm>
 #include <climits>
+#include <stdexcept> 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************ NaiveSelection **************************************************** //
@@ -10,6 +11,10 @@
 NaiveSelection::NaiveSelection() : lastSelectedIndex(-1) {}
 
 const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
+    if (facilitiesOptions.empty()) {
+        throw std::runtime_error("No facilities available to select");
+    }
+
     lastSelectedIndex = (lastSelectedIndex + 1) % facilitiesOptions.size();
     return facilitiesOptions[lastSelectedIndex];
 }
@@ -47,6 +52,10 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
             bestFacility = &facility;
         }
     }
+    
+    LifeQualityScore += bestFacility->getLifeQualityScore();
+    EconomyScore += bestFacility->getEconomyScore();
+    EnvironmentScore += bestFacility->getEnvironmentScore();
 
     return *bestFacility;
 }
@@ -74,7 +83,7 @@ const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>&
             return facilitiesOptions[curr]; 
         }
     }
-
+    throw std::runtime_error("No suitable facility found for EconomySelection");
 }
 
 const string EconomySelection::toString() const {
@@ -100,6 +109,7 @@ const FacilityType& SustainabilitySelection::selectFacility(const vector<Facilit
             return facilitiesOptions[curr]; 
         }
     }
+    throw std::runtime_error("No suitable facility found for SustainabilitySelection");
 }
 
 const string SustainabilitySelection::toString() const {
