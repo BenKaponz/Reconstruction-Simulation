@@ -1,0 +1,15 @@
+step 1
+planStatus 0
+planStatus 1
+settlement anotherVillage 0
+backup
+log
+plan anotherVillage bal
+planStatus 2
+restore
+planStatus 2
+facility road 1 2 1 1 1
+plan anotherVillage bal
+step 2
+planStatus 2
+close

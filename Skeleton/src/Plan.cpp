@@ -45,7 +45,6 @@ Plan::Plan(const Plan &other)
     }
 }
 
-
 Plan::~Plan() {
     delete selectionPolicy; ///remember
     for (auto *facility : facilities) {
