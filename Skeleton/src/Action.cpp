@@ -11,6 +11,8 @@
 
 using namespace std;
 
+extern Simulation *backup = nullptr; // Global variable
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************* BaseAction ******************************************************* //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -301,7 +303,6 @@ const string Close::toString() const {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // *********************************************** BackupSimulation *************************************************** //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-extern Simulation *backup = nullptr;
 
 BackupSimulation::BackupSimulation() {}
 
@@ -330,10 +331,13 @@ RestoreSimulation::RestoreSimulation() {}
 
 void RestoreSimulation::act(Simulation &simulation) {
     try {
-        if (!backup) {
-            throw runtime_error("No backup exists!");
+        // Check if a backup exists
+        if (backup == nullptr) {
+            throw runtime_error("No backup available");
         }
-        simulation = *backup; // Use the copy assignment operator
+        
+        // Restore the simulation by overwriting the current state with the backup
+        simulation = *backup; 
         complete();
     } catch (const exception &e) {
         error(e.what());

@@ -3,12 +3,13 @@
 #include <vector>
 #include "Facility.h"
 #include "Plan.h"
+#include "SelectionPolicy.h"
 #include "Settlement.h"
 using std::string;
 using std::vector;
 
 class BaseAction;
-class SelectionPolicy;
+
 
 class Simulation {
     public:
@@ -22,12 +23,15 @@ class Simulation {
         bool addSettlement(Settlement *settlement);
         bool addFacility(FacilityType facility);
         bool isSettlementExists(const string &settlementName);
+        bool isFacilityExists(const string &facilityName);
+        bool isPlanExists(const int planId);
         Settlement *getSettlement(const string &settlementName);
         Plan &getPlan(const int planID);
         const std::vector<BaseAction*>& getActionsLog() const;
         void step();
         void close();
         void open();
+        
 
     private:
         bool isRunning;

@@ -106,10 +106,17 @@ bool Simulation::isSettlementExists(const string &settlementName) {
                   [&](const Settlement *s) { return s->getName() == settlementName; });
 }
 
-bool Simulation::isFacilityExists(const string &facilityName) const {
+// Check if a type of facility exists
+bool Simulation::isFacilityExists(const string &facilityName) {
     return any_of(facilitiesOptions.begin(), facilitiesOptions.end(),
                        [&](const FacilityType &facility) { return facility.getName() == facilityName; });
 }     
+
+// Check if a plan exists
+bool Simulation::isPlanExists(const int planId) {
+    return std::any_of(plans.begin(), plans.end(),
+                       [&](const Plan &plan) { return plan.getPlanId() == planId; });
+}
 
 // Get a settlement by name
 Settlement *Simulation::getSettlement(const string &settlementName) {

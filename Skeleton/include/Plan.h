@@ -17,6 +17,7 @@ class Plan {
         Plan &operator=(const Plan &other);  
         ~Plan();
         
+        const Settlement& getSettlement() const;
         const int getPlanId() const;
         const int getlifeQualityScore() const;
         const int getEconomyScore() const;
