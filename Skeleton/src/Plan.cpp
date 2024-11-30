@@ -45,44 +45,6 @@ Plan::Plan(const Plan &other)
     }
 }
 
-// //Copy assignment operator
-// Plan &Plan::operator=(const Plan &other) {
-//     if (this != &other) {
-
-//         // Clean up existing resources
-//         for (auto facility : facilities) {
-//             delete facility;
-//         }
-//         facilities.clear();
-
-//         for (auto facility : underConstruction) {
-//             delete facility;
-//         }
-//         underConstruction.clear();
-
-//         delete selectionPolicy;
-
-//         // Copy from the other object
-//         plan_id = other.plan_id;
-//         settlement = other.settlement;
-//         selectionPolicy = other.selectionPolicy->clone();
-//         status = other.status;
-//         life_quality_score = other.life_quality_score;
-//         economy_score = other.economy_score;
-//         environment_score = other.environment_score;
-
-//         // Deep copy facilities
-//         for (const auto *facility : other.facilities) {
-//             facilities.push_back(new Facility(*facility));
-//         }
-
-//         // Deep copy under-construction facilities
-//         for (const auto *facility : other.underConstruction) {
-//             underConstruction.push_back(new Facility(*facility));
-//         }
-//     }
-//     return *this;
-// }
 
 Plan::~Plan() {
     delete selectionPolicy; ///remember
