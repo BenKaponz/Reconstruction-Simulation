@@ -16,6 +16,10 @@ class Simulation {
         Simulation(const string &configFilePath);
         Simulation(const Simulation &other);              
         Simulation &operator=(const Simulation &other);   
+        // Move Constructor
+        Simulation(Simulation &&other) noexcept;
+        // Move Assignment Operator
+        Simulation &operator=(Simulation &&other) noexcept;
         ~Simulation(); 
         void start();
         void addPlan(const Settlement *settlement, SelectionPolicy *selectionPolicy);

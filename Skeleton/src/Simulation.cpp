@@ -75,15 +75,20 @@ Simulation::Simulation(const Simulation &other)
     }
 }
 
+//Assignment Operator=
 Simulation &Simulation::operator=(const Simulation &other) {
     if (this == &other) return *this; // Handle self-assignment
 
-    // // Clean up current state
-    // for (auto *settlement : settlements) {
-    //     delete settlement;
-    // }
-    // settlements.clear();
-    settlements = other.settlements;
+    // Clean up current state
+    for (auto *settlement : settlements) {
+        delete settlement;
+    }
+    settlements.clear();
+
+    // Deep copy of settlements
+    for (const auto *settlement : other.settlements) {
+        settlements.push_back(new Settlement(*settlement));
+    }
 
     for (auto *action : actionsLog) {
         delete action;
@@ -97,22 +102,104 @@ Simulation &Simulation::operator=(const Simulation &other) {
     isRunning = other.isRunning;
     planCounter = other.planCounter;
 
+    // Deep copy of facilitiesOptions
     facilitiesOptions = vector<FacilityType>(other.facilitiesOptions);
-
-    // for (const auto *settlement : other.settlements) {
-    //     settlements.push_back(new Settlement(*settlement));
-    // }
-
-    for (const auto &plan : other.plans) {
-        plans.emplace_back(plan);
+    
+     // Deep copy plans
+    for (const auto& plan : other.plans) {
+        plans.emplace_back(plan); // Assumes Plan has a proper copy constructor
     }
 
+    // Deep copy of actionsLog
     for (const auto *action : other.actionsLog) {
-        actionsLog.push_back(action->clone());
+        actionsLog.push_back(action->clone()); // Ensure clone() is implemented correctly
     }
 
     return *this;
 }
+// Move Constructor
+Simulation::Simulation(Simulation &&other) noexcept
+    : isRunning(other.isRunning),
+      planCounter(other.planCounter),
+      actionsLog(std::move(other.actionsLog)),
+      plans(std::move(other.plans)),
+      settlements(std::move(other.settlements)),
+      facilitiesOptions(std::move(other.facilitiesOptions)) {
+    // Clear the state of the moved-from object
+    other.isRunning = false;
+    other.planCounter = 0;
+}
+
+// Move Assignment Operator
+Simulation &Simulation::operator=(Simulation &&other) noexcept {
+    if (this == &other) return *this; // Handle self-assignment
+
+    // Clean up current state
+    for (auto *settlement : settlements) {
+        delete settlement;
+    }
+    settlements.clear();
+
+    for (auto *action : actionsLog) {
+        delete action;
+    }
+    actionsLog.clear();
+
+    plans.clear();
+    facilitiesOptions.clear();
+
+    // Steal resources from the moved-from object
+    isRunning = other.isRunning;
+    planCounter = other.planCounter;
+    actionsLog = std::move(other.actionsLog);
+    plans = std::move(other.plans);
+    settlements = std::move(other.settlements);
+    facilitiesOptions = std::move(other.facilitiesOptions);
+
+    // Reset the moved-from object
+    other.isRunning = false;
+    other.planCounter = 0;
+
+    return *this;
+}
+// Simulation &Simulation::operator=(const Simulation &other) {
+//     if (this == &other) return *this; // Handle self-assignment
+
+//     // // Clean up current state
+//     // for (auto *settlement : settlements) {
+//     //     delete settlement;
+//     // }
+//     // settlements.clear();
+//     settlements = other.settlements;
+
+//     for (auto *action : actionsLog) {
+//         delete action;
+//     }
+//     actionsLog.clear();
+
+//     plans.clear();
+//     facilitiesOptions.clear();
+
+//     // Copy new state from 'other'
+//     isRunning = other.isRunning;
+//     planCounter = other.planCounter;
+
+//     facilitiesOptions = vector<FacilityType>(other.facilitiesOptions);
+
+//     // for (const auto *settlement : other.settlements) {
+//     //     settlements.push_back(new Settlement(*settlement));
+//     // }
+
+//     for (const auto &plan : other.plans) {
+//         plans.emplace_back(plan);
+//     }
+
+//     for (const auto *action : other.actionsLog) {
+//         actionsLog.push_back(action->clone());
+//     }
+
+//     return *this;
+// }
 
 // Distructor 
  Simulation::~Simulation() {

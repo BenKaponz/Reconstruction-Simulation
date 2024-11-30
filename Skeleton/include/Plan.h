@@ -15,6 +15,8 @@ class Plan {
         Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
         Plan(const Plan &other);             
         Plan &operator=(const Plan &other) = delete;  
+        Plan(Plan &&other) noexcept;
+        Plan &operator=(Plan &&other) noexcept = delete;
         ~Plan();
         const Settlement& getSettlement() const;
         const int getPlanId() const;

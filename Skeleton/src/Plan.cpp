@@ -45,6 +45,23 @@ Plan::Plan(const Plan &other)
     }
 }
 
+Plan::Plan(Plan &&other) noexcept
+    : plan_id(other.plan_id),
+      settlement(other.settlement),
+      selectionPolicy(other.selectionPolicy),
+      status(other.status),
+      facilities(std::move(other.facilities)),
+      underConstruction(std::move(other.underConstruction)),
+      facilityOptions(std::move(other.facilityOptions)),
+      life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score),
+      environment_score(other.environment_score) {
+
+    // Reset pointers from the source object to ensure no double free
+    other.settlement = nullptr;
+    other.selectionPolicy = nullptr;
+}
+
 Plan::~Plan() {
     delete selectionPolicy; ///remember
     for (auto *facility : facilities) {
