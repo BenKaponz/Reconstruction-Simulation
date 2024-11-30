@@ -2,12 +2,14 @@
 #include <algorithm>
 #include <climits>
 #include <stdexcept> 
+#include <iostream>
+#include <fstream>
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************ NaiveSelection **************************************************** //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Constructor
 NaiveSelection::NaiveSelection() : lastSelectedIndex(-1) {}
 
 const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
@@ -20,7 +22,7 @@ const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& f
 }
 
 const string NaiveSelection::toString() const {
-    return "NaiveSelection";
+    return "nai";
 }
 
 NaiveSelection* NaiveSelection::clone() const {
@@ -61,7 +63,7 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
 }
 
 const string BalancedSelection::toString() const {
-    return "BalancedSelection";
+    return "bal";
 }
 
 BalancedSelection* BalancedSelection::clone() const {
@@ -87,7 +89,7 @@ const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>&
 }
 
 const string EconomySelection::toString() const {
-    return "EconomySelection";
+    return "eco";
 }
 
 EconomySelection* EconomySelection::clone() const {
@@ -113,7 +115,7 @@ const FacilityType& SustainabilitySelection::selectFacility(const vector<Facilit
 }
 
 const string SustainabilitySelection::toString() const {
-    return "SustainabilitySelection";
+    return "sus";
 }
 
 SustainabilitySelection* SustainabilitySelection::clone() const {

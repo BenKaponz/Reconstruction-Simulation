@@ -13,6 +13,9 @@ class SelectionPolicy;
 class Simulation {
     public:
         Simulation(const string &configFilePath);
+        Simulation(const Simulation &other);              
+        Simulation &operator=(const Simulation &other);   
+        ~Simulation(); 
         void start();
         void addPlan(const Settlement *settlement, SelectionPolicy *selectionPolicy);
         void addAction(BaseAction *action);
@@ -21,13 +24,14 @@ class Simulation {
         bool isSettlementExists(const string &settlementName);
         Settlement *getSettlement(const string &settlementName);
         Plan &getPlan(const int planID);
+        const std::vector<BaseAction*>& getActionsLog() const;
         void step();
         void close();
         void open();
 
     private:
         bool isRunning;
-        int planCounter; //For assigning unique plan IDs
+        int planCounter; 
         vector<BaseAction*> actionsLog;
         vector<Plan> plans;
         vector<Settlement*> settlements;
