@@ -182,7 +182,7 @@ const string Plan::toString() const {
 
     for (const auto &facility : facilities) {
         output << "FacilityName: " << facility->getName() << "\n";
-        output << "FacilityStatus: OPERATIONAL";
+        output << "FacilityStatus: OPERATIONAL\n";
     }
 
     return output.str();
