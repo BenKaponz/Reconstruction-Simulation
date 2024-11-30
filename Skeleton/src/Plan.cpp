@@ -16,68 +16,68 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
       environment_score(0) {
 }
 
-Plan::Plan(const Plan &other)
-    : plan_id(other.plan_id),
-      settlement(other.settlement),
-      selectionPolicy(other.selectionPolicy ? other.selectionPolicy->clone() : nullptr),
-      status(other.status),
-      facilityOptions(other.facilityOptions),
-      life_quality_score(other.life_quality_score),
-      economy_score(other.economy_score),
-      environment_score(other.environment_score) {
-    // Deep copy facilities
-    for (auto facility : other.facilities) {
-        facilities.push_back(new Facility(*facility));
-    }
+// Plan::Plan(const Plan &other)
+//     : plan_id(other.plan_id),
+//       settlement(other.settlement),
+//       selectionPolicy(other.selectionPolicy ? other.selectionPolicy->clone() : nullptr),
+//       status(other.status),
+//       facilityOptions(other.facilityOptions),
+//       life_quality_score(other.life_quality_score),
+//       economy_score(other.economy_score),
+//       environment_score(other.environment_score) {
+//     // Deep copy facilities
+//     for (auto facility : other.facilities) {
+//         facilities.push_back(new Facility(*facility));
+//     }
 
-    // Deep copy under-construction facilities
-    for (auto facility : other.underConstruction) {
-        underConstruction.push_back(new Facility(*facility));
-    }
-}
+//     // Deep copy under-construction facilities
+//     for (auto facility : other.underConstruction) {
+//         underConstruction.push_back(new Facility(*facility));
+//     }
+// }
 
-Plan &Plan::operator=(const Plan &other) {
-    if (this == &other) {
-        return *this; // Handle self-assignment
-    }
+// Plan &Plan::operator=(const Plan &other) {
+//     if (this == &other) {
+//         return *this; // Handle self-assignment
+//     }
 
-    // Clean up existing resources
-    for (auto facility : facilities) {
-        delete facility;
-    }
-    facilities.clear();
+//     // Clean up existing resources
+//     for (auto facility : facilities) {
+//         delete facility;
+//     }
+//     facilities.clear();
 
-    for (auto facility : underConstruction) {
-        delete facility;
-    }
-    underConstruction.clear();
+//     for (auto facility : underConstruction) {
+//         delete facility;
+//     }
+//     underConstruction.clear();
 
-    delete selectionPolicy;
+//     delete selectionPolicy;
 
-    // Copy from the other object
-    plan_id = other.plan_id;
-    settlement = other.settlement;
-    selectionPolicy = other.selectionPolicy ? other.selectionPolicy->clone() : nullptr;
-    status = other.status;
-    life_quality_score = other.life_quality_score;
-    economy_score = other.economy_score;
-    environment_score = other.environment_score;
+//     // Copy from the other object
+//     plan_id = other.plan_id;
+//     settlement = other.settlement;
+//     selectionPolicy = other.selectionPolicy ? other.selectionPolicy->clone() : nullptr;
+//     status = other.status;
+//     life_quality_score = other.life_quality_score;
+//     economy_score = other.economy_score;
+//     environment_score = other.environment_score;
 
-    // Deep copy facilities
-    for (auto facility : other.facilities) {
-        facilities.push_back(new Facility(*facility));
-    }
+//     // Deep copy facilities
+//     for (auto facility : other.facilities) {
+//         facilities.push_back(new Facility(*facility));
+//     }
 
-    // Deep copy under-construction facilities
-    for (auto facility : other.underConstruction) {
-        underConstruction.push_back(new Facility(*facility));
-    }
+//     // Deep copy under-construction facilities
+//     for (auto facility : other.underConstruction) {
+//         underConstruction.push_back(new Facility(*facility));
+//     }
 
-    return *this;
-}
+//     return *this;
+// }
 
 Plan::~Plan() {
-    delete selectionPolicy; 
+    delete selectionPolicy; ///remember
     for (auto facility : facilities) {
         delete facility;
     }
@@ -100,6 +100,10 @@ const int Plan::getEconomyScore() const {
 
 const int Plan::getEnvironmentScore() const {
     return environment_score;
+}
+
+const Settlement& Plan::getSettlement() const {
+    return *settlement; // Dereference the pointer to return the referenced Settlement object
 }
 
 void Plan::setSelectionPolicy(SelectionPolicy *newSelectionPolicy) {

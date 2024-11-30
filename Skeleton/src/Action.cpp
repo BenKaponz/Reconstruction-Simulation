@@ -15,7 +15,7 @@ using namespace std;
 // ************************************************* BaseAction ******************************************************* //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-BaseAction::BaseAction() : status(ActionStatus::ERROR) {}
+BaseAction::BaseAction() : status(ActionStatus::ERROR), errorMsg("") {}
 
 ActionStatus BaseAction::getStatus() const {
     return status;
@@ -26,8 +26,8 @@ void BaseAction::complete() {
 }
 
 void BaseAction::error(string errorMsg) {
-    this->errorMsg = errorMsg;
-    status = ActionStatus::ERROR;
+    this->errorMsg = move(errorMsg); // Store the error message -- *move חוסך את עלות ההעתקה במקום שכפול 
+    cout << "Error: " << this->errorMsg << endl; // Print the error message
 }
 
 const string &BaseAction::getErrorMsg() const {
@@ -72,22 +72,24 @@ AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy)
 
 void AddPlan::act(Simulation &simulation) {
     try {
+        // Check if the settlement exists
+        if (!simulation.isSettlementExists(settlementName)) {
+            throw runtime_error("Cannot create this plan: Settlement not found");
+        }
          // Determine the appropriate SelectionPolicy based on the input string
         SelectionPolicy *policy = nullptr;
-
         if (selectionPolicy == "eco") {
             policy = new EconomySelection();
         } else if (selectionPolicy == "bal") {
             policy = new BalancedSelection(0, 0, 0);
         } else if (selectionPolicy == "sus") {
             policy = new SustainabilitySelection();
-        } else if (selectionPolicy == "nai") {
+        } else if (selectionPolicy == "nve") {
             policy = new NaiveSelection();
         } else {
             throw invalid_argument("Invalid selection policy: " + selectionPolicy);
         }
-        simulation.addPlan(simulation.getSettlement(settlementName),
-                           policy);
+        simulation.addPlan(simulation.getSettlement(settlementName), policy);
         complete();
     } catch (const exception &e) {
         error(e.what());
@@ -114,6 +116,10 @@ AddSettlement::AddSettlement(const string &settlementName, SettlementType settle
 
 void AddSettlement::act(Simulation &simulation) {
     try {
+        // Check if the settlement already exists
+        if (simulation.isSettlementExists(settlementName)) {
+            throw runtime_error("Settlement already exists");
+        }
         simulation.addSettlement(new Settlement(settlementName, settlementType));
         complete();
     } catch (const exception &e) {
@@ -144,6 +150,10 @@ AddFacility::AddFacility(const string &facilityName, const FacilityCategory faci
 
 void AddFacility::act(Simulation &simulation) {
     try {
+        // Check if the facility already exists
+        if (simulation.isFacilityExists(facilityName)) {
+            throw runtime_error("Facility already exists");
+        }
         simulation.addFacility(FacilityType(facilityName, facilityCategory, price,
                                             lifeQualityScore, economyScore, environmentScore));
         complete();
@@ -174,6 +184,9 @@ PrintPlanStatus::PrintPlanStatus(int planId) : planId(planId) {}
 
 void PrintPlanStatus::act(Simulation &simulation) {
     try {
+        if (!simulation.isPlanExists(planId)) {
+            throw runtime_error("Plan doesn't exists");
+        }
         cout << simulation.getPlan(planId).toString();
         complete();
     } catch (const exception &e) {
@@ -201,6 +214,9 @@ ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy)
 
 void ChangePlanPolicy::act(Simulation &simulation) {
     try {
+        if (!simulation.isPlanExists(planId)) {
+            throw runtime_error("Cannot change selection policy");
+        }
         Plan &plan = simulation.getPlan(planId);
 
         // Determine the appropriate SelectionPolicy based on the input string
@@ -208,13 +224,13 @@ void ChangePlanPolicy::act(Simulation &simulation) {
         if (newPolicy == "eco") {
             policy = new EconomySelection();
         } else if (newPolicy == "bal") {
-            policy = new BalancedSelection(0, 0, 0);
+            policy = new BalancedSelection(0, 0, 0); // to check -------------------------------------------------!!!!!!!!!!
         } else if (newPolicy == "sus") {
             policy = new SustainabilitySelection();
         } else if (newPolicy == "nai") {
             policy = new NaiveSelection();
         } else {
-            throw invalid_argument("Invalid selection policy: " + newPolicy);
+            throw runtime_error("Cannot change selection policy");
         }
 
         plan.setSelectionPolicy(policy);
@@ -230,8 +246,7 @@ ChangePlanPolicy *ChangePlanPolicy::clone() const {
 
 const string ChangePlanPolicy::toString() const {
     ostringstream oss;
-    oss << "changePolicy " << planId << " " << newPolicy << " "
-        << ((getStatus() == ActionStatus::COMPLETED) ? "COMPLETED" : "ERROR");
+    oss << "changePolicy " << planId << " " << newPolicy << " " <<((getStatus() == ActionStatus::COMPLETED) ? "COMPLETED" : "ERROR");
     return oss.str();
 }
 
@@ -270,12 +285,8 @@ const string PrintActionsLog::toString() const {
 Close::Close() {}
 
 void Close::act(Simulation &simulation) {
-    try {
-        simulation.close();
-        complete();
-    } catch (const exception &e) {
-        error(e.what());
-    }
+    simulation.close();
+    complete();
 }
 
 Close *Close::clone() const {
@@ -283,28 +294,23 @@ Close *Close::clone() const {
 }
 
 const string Close::toString() const {
-    ostringstream oss;
-    oss << "close "
-        << ((getStatus() == ActionStatus::COMPLETED) ? "COMPLETED" : "ERROR");
+    return "close COMPLETED";
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // *********************************************** BackupSimulation *************************************************** //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static Simulation *backup = nullptr;
+extern Simulation *backup = nullptr;
 
 BackupSimulation::BackupSimulation() {}
 
 void BackupSimulation::act(Simulation &simulation) {
-    try {
-        if (backup) delete backup;
-        backup = new Simulation(simulation);
-        complete();
-    } catch (const exception &e) {
-        error(e.what());
+    if (backup != nullptr) {
+        delete backup;
     }
+    backup = new Simulation(simulation);
+    complete();
 }
 
 BackupSimulation *BackupSimulation::clone() const {
@@ -312,10 +318,7 @@ BackupSimulation *BackupSimulation::clone() const {
 }
 
 const string BackupSimulation::toString() const {
-    ostringstream oss;
-    oss << "backup "
-        << ((getStatus() == ActionStatus::COMPLETED) ? "COMPLETED" : "ERROR");
-    return oss.str();
+    return "backup COMPLETED";
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
