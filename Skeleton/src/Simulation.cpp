@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -52,28 +53,49 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false), planCou
     configFile.close();
 }
 
-//Copy constuctor
 Simulation::Simulation(const Simulation &other)
-    : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(), plans(), settlements(),
-    facilitiesOptions() {
-    // Deep copy facilitiesOptions
-    facilitiesOptions = vector<FacilityType>(other.facilitiesOptions);
+    : isRunning(other.isRunning),
+      planCounter(other.planCounter),
+      actionsLog(),
+      plans(),
+      settlements(),
+      facilitiesOptions(other.facilitiesOptions) {
 
-    // Deep copy settlements
-    for (const auto *settlement : other.settlements) {
-        settlements.push_back(new Settlement(*settlement));
+    // העתקת היישובים
+    for (size_t i = 0; i < other.settlements.size(); ++i) {
+        settlements.push_back(new Settlement(*other.settlements[i])); // יצירת עותק של כל יישוב
     }
 
-    // Deep copy plans
-    for (const auto &plan : other.plans) {
-        plans.emplace_back(plan); // Plan צריך לתמוך ב-Copy Constructor
+    // העתקת תוכניות ושמירת הקשר ליישובים החדשים
+    for (size_t i = 0; i < other.plans.size(); ++i) {
+        // מציאת היישוב המתאים ברשימה החדשה לפי אינדקס
+        // מציאת האינדקס של היישוב הישן
+        const Settlement *oldSettlement = &other.plans[i].getSettlement();
+        size_t settlementIndex = 0;
+        for (size_t j = 0; j < other.settlements.size(); ++j) {
+            if (other.settlements[j] == oldSettlement) {
+                settlementIndex = j;
+                break;
+            }
+
+        }
+
+        // שימוש ביישוב החדש עם אותו אינדקס
+        Settlement &newSettlement = *settlements[settlementIndex];
+        
+        // יצירת עותק של התוכנית
+        plans.emplace_back(other.plans[i].getPlanId(), 
+                           newSettlement, 
+                           other.plans[i].getSelectionPolicy()->clone(), 
+                           facilitiesOptions);
     }
 
-    // Deep copy actionsLog
-    for (const auto *action : other.actionsLog) {
-        actionsLog.push_back(action->clone()); // Assume BaseAction::clone() is implemented
+    // העתקת לוג הפעולות
+    for (size_t i = 0; i < other.actionsLog.size(); ++i) {
+        actionsLog.push_back(other.actionsLog[i]->clone()); // יצירת עותק
     }
 }
+
 
 //Assignment Operator=
 Simulation &Simulation::operator=(const Simulation &other) {
@@ -82,12 +104,13 @@ Simulation &Simulation::operator=(const Simulation &other) {
     // Clean up current state
     for (auto *settlement : settlements) {
         delete settlement;
+        settlement = nullptr;
     }
     settlements.clear();
 
     // Deep copy of settlements
-    for (const auto *settlement : other.settlements) {
-        settlements.push_back(new Settlement(*settlement));
+    for (Settlement* settlement : other.settlements) {
+        settlements.push_back(new Settlement(settlement->getName(), settlement->getType()));
     }
 
     for (auto *action : actionsLog) {
@@ -135,10 +158,10 @@ Simulation &Simulation::operator=(Simulation &&other) noexcept {
     if (this == &other) return *this; // Handle self-assignment
 
     // Clean up current state
-    for (auto *settlement : settlements) {
+    for (auto *settlement : this->settlements) {
         delete settlement;
     }
-    settlements.clear();
+    this->settlements.clear();
 
     for (auto *action : actionsLog) {
         delete action;
@@ -162,144 +185,24 @@ Simulation &Simulation::operator=(Simulation &&other) noexcept {
 
     return *this;
 }
-// Simulation &Simulation::operator=(const Simulation &other) {
-//     if (this == &other) return *this; // Handle self-assignment
 
-//     // // Clean up current state
-//     // for (auto *settlement : settlements) {
-//     //     delete settlement;
-//     // }
-//     // settlements.clear();
-//     settlements = other.settlements;
-
-//     for (auto *action : actionsLog) {
-//         delete action;
-//     }
-//     actionsLog.clear();
-
-//     plans.clear();
-//     facilitiesOptions.clear();
-
-//     // Copy new state from 'other'
-//     isRunning = other.isRunning;
-//     planCounter = other.planCounter;
-
-//     facilitiesOptions = vector<FacilityType>(other.facilitiesOptions);
-
-//     // for (const auto *settlement : other.settlements) {
-//     //     settlements.push_back(new Settlement(*settlement));
-//     // }
-
-//     for (const auto &plan : other.plans) {
-//         plans.emplace_back(plan);
-//     }
-
-//     for (const auto *action : other.actionsLog) {
-//         actionsLog.push_back(action->clone());
-//     }
-
-//     return *this;
-// }
 
 // Distructor 
  Simulation::~Simulation() {
     for (auto* settlement : settlements) {
         delete settlement;
-        settlement = nullptr;
     }
     settlements.clear();
 
 
     for (auto* action : actionsLog) {
         delete action;
-        action = nullptr;
     }
     actionsLog.clear();
 
 
 }
 
-// void Simulation::start() {
-//     open(); // Indicates that the simulation is running
-
-//     while (isRunning) {
-//         string line;
-//         cout << "Enter an action: ";
-//         getline(cin, line);
-
-//         vector<string> tokens = Auxiliary::parseArguments(line);
-//         if (tokens.empty()) continue; // Skip empty input
-
-//         BaseAction *action = nullptr;
-
-//         try {
-//             // Debugging checkpoint - לפני יצירת פעולה
-//             cout << "Checkpoint: Received command: " << line << endl;
-
-//             if (tokens[0] == "settlement") {
-//                 if (tokens.size() != 3) throw runtime_error("Invalid settlement command");
-//                 action = new AddSettlement(tokens[1], static_cast<SettlementType>(stoi(tokens[2])));
-//             } 
-//             else if (tokens[0] == "facility") {
-//                 if (tokens.size() != 7) throw runtime_error("Invalid facility command");
-//                 action = new AddFacility(tokens[1], static_cast<FacilityCategory>(stoi(tokens[2])), stoi(tokens[3]),
-//                                          stoi(tokens[4]), stoi(tokens[5]), stoi(tokens[6]));
-//             } 
-//             else if (tokens[0] == "plan") {
-//                 if (tokens.size() != 3) throw runtime_error("Invalid plan command");
-//                 action = new AddPlan(tokens[1], tokens[2]);
-//             } 
-//             else if (tokens[0] == "step") {
-//                 if (tokens.size() != 2) throw runtime_error("Invalid step command");
-//                 action = new SimulateStep(stoi(tokens[1]));
-//             } 
-//             else if (tokens[0] == "planStatus") {
-//                 if (tokens.size() != 2) throw runtime_error("Invalid planStatus command");
-//                 action = new PrintPlanStatus(stoi(tokens[1]));
-//             } 
-//             else if (tokens[0] == "changePolicy") {
-//                 if (tokens.size() != 3) throw runtime_error("Invalid changePolicy command");
-//                 action = new ChangePlanPolicy(stoi(tokens[1]), tokens[2]);
-//             } 
-//             else if (tokens[0] == "log") {
-//                 action = new PrintActionsLog();
-//             } 
-//             else if (tokens[0] == "close") {
-//                 action = new Close();
-//             } 
-//             else if (tokens[0] == "backup") {
-//                 action = new BackupSimulation();
-//             } 
-//             else if (tokens[0] == "restore") {
-//                 action = new RestoreSimulation();
-//             } 
-//             else {
-//                 throw runtime_error("Unknown command");
-//             }
-
-//             // Debugging checkpoint - לפני הרצת פעולה
-//             cout << "Checkpoint: About to execute action: " << tokens[0] << endl;
-
-//             // If action was created, execute it and add it to the log
-//             if (action) {
-//                 action->act(*this);
-
-//                 // Debugging checkpoint - פעולה בוצעה בהצלחה
-//                 cout << "Checkpoint: Action executed successfully: " << action->toString() << endl;
-
-//                 addAction(action);
-//             }
-//         } 
-//         catch (const exception &e) {
-//             // Print error message
-//             if (action) delete action; // Clean up memory if an action was created but not added
-//             cout << "Error: " << e.what() << endl;
-
-//             // Debugging checkpoint - כישלון בפעולה
-//             cout << "Checkpoint: Action failed: " << line << endl;
-//         }
-//     }
-// }
 void Simulation::start() {
     open(); // Indicates that the simulation is running
 

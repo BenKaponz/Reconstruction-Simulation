@@ -23,6 +23,7 @@ class Plan {
         const int getlifeQualityScore() const;
         const int getEconomyScore() const;
         const int getEnvironmentScore() const;
+        SelectionPolicy* getSelectionPolicy() const; 
         void setSelectionPolicy(SelectionPolicy *selectionPolicy);
         void step();
         void printStatus();

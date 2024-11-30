@@ -63,7 +63,7 @@ Plan::Plan(Plan &&other) noexcept
 }
 
 Plan::~Plan() {
-    delete selectionPolicy; ///remember
+    delete selectionPolicy; 
     for (auto *facility : facilities) {
         delete facility;
     }
@@ -86,6 +86,10 @@ const int Plan::getEconomyScore() const {
 
 const int Plan::getEnvironmentScore() const {
     return environment_score;
+}
+
+SelectionPolicy* Plan::getSelectionPolicy() const {
+    return selectionPolicy;
 }
 
 const Settlement& Plan::getSettlement() const {
