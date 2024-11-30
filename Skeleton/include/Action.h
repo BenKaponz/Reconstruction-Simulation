@@ -9,6 +9,8 @@ enum class ActionStatus{
     COMPLETED, ERROR
 };
 
+extern Simulation *backup;
+
 class BaseAction{
     public:
         BaseAction();

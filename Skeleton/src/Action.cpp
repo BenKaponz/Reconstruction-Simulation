@@ -11,13 +11,11 @@
 
 using namespace std;
 
-extern Simulation *backup = nullptr; // Global variable
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************* BaseAction ******************************************************* //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-BaseAction::BaseAction() : status(ActionStatus::ERROR), errorMsg("") {}
+BaseAction::BaseAction() : errorMsg(""), status(ActionStatus::ERROR) {}
 
 ActionStatus BaseAction::getStatus() const {
     return status;
@@ -335,7 +333,7 @@ void RestoreSimulation::act(Simulation &simulation) {
         if (backup == nullptr) {
             throw runtime_error("No backup available");
         }
-        
+
         // Restore the simulation by overwriting the current state with the backup
         simulation = *backup; 
         complete();
@@ -352,4 +350,5 @@ const string RestoreSimulation::toString() const {
     ostringstream oss;
     oss << "restore "
         << ((getStatus() == ActionStatus::COMPLETED) ? "COMPLETED" : "ERROR");
+    return oss.str();
 }

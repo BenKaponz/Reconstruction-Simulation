@@ -1,4 +1,10 @@
+#include "Settlement.h"
+#include "Facility.h"
+#include "SelectionPolicy.h"
+#include "Plan.h"
 #include "Simulation.h"
+#include "Action.h"
+#include "Auxiliary.h"
 #include <iostream>
 
 using namespace std;

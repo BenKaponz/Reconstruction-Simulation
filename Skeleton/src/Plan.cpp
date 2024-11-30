@@ -5,83 +5,91 @@
 
 using namespace std;
 
+//Constructor
 Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions)
     : plan_id(planId),
       settlement(&settlement),
       selectionPolicy(selectionPolicy),
       status(PlanStatus::AVALIABLE),
+      facilities(),
+      underConstruction(),
       facilityOptions(facilityOptions),
       life_quality_score(0),
       economy_score(0),
-      environment_score(0) {
+      environment_score(0)
+      {
 }
 
-// Plan::Plan(const Plan &other)
-//     : plan_id(other.plan_id),
-//       settlement(other.settlement),
-//       selectionPolicy(other.selectionPolicy ? other.selectionPolicy->clone() : nullptr),
-//       status(other.status),
-//       facilityOptions(other.facilityOptions),
-//       life_quality_score(other.life_quality_score),
-//       economy_score(other.economy_score),
-//       environment_score(other.environment_score) {
-//     // Deep copy facilities
-//     for (auto facility : other.facilities) {
-//         facilities.push_back(new Facility(*facility));
-//     }
+//Copy Constructor 
+Plan::Plan(const Plan &other)
+    : plan_id(other.plan_id),
+      settlement(other.settlement),
+      selectionPolicy(other.selectionPolicy->clone()),
+      status(other.status),
+      facilities(),
+      underConstruction(),
+      facilityOptions(other.facilityOptions),
+      life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score),
+      environment_score(other.environment_score)
+    {
 
-//     // Deep copy under-construction facilities
-//     for (auto facility : other.underConstruction) {
-//         underConstruction.push_back(new Facility(*facility));
-//     }
-// }
+    // Deep copy facilities
+    for (auto facility : other.facilities) {
+        facilities.push_back(new Facility(*facility));
+    }
 
+    // Deep copy under-construction facilities
+    for (auto facility : other.underConstruction) {
+        underConstruction.push_back(new Facility(*facility));
+    }
+}
+
+// //Copy assignment operator
 // Plan &Plan::operator=(const Plan &other) {
-//     if (this == &other) {
-//         return *this; // Handle self-assignment
+//     if (this != &other) {
+
+//         // Clean up existing resources
+//         for (auto facility : facilities) {
+//             delete facility;
+//         }
+//         facilities.clear();
+
+//         for (auto facility : underConstruction) {
+//             delete facility;
+//         }
+//         underConstruction.clear();
+
+//         delete selectionPolicy;
+
+//         // Copy from the other object
+//         plan_id = other.plan_id;
+//         settlement = other.settlement;
+//         selectionPolicy = other.selectionPolicy->clone();
+//         status = other.status;
+//         life_quality_score = other.life_quality_score;
+//         economy_score = other.economy_score;
+//         environment_score = other.environment_score;
+
+//         // Deep copy facilities
+//         for (const auto *facility : other.facilities) {
+//             facilities.push_back(new Facility(*facility));
+//         }
+
+//         // Deep copy under-construction facilities
+//         for (const auto *facility : other.underConstruction) {
+//             underConstruction.push_back(new Facility(*facility));
+//         }
 //     }
-
-//     // Clean up existing resources
-//     for (auto facility : facilities) {
-//         delete facility;
-//     }
-//     facilities.clear();
-
-//     for (auto facility : underConstruction) {
-//         delete facility;
-//     }
-//     underConstruction.clear();
-
-//     delete selectionPolicy;
-
-//     // Copy from the other object
-//     plan_id = other.plan_id;
-//     settlement = other.settlement;
-//     selectionPolicy = other.selectionPolicy ? other.selectionPolicy->clone() : nullptr;
-//     status = other.status;
-//     life_quality_score = other.life_quality_score;
-//     economy_score = other.economy_score;
-//     environment_score = other.environment_score;
-
-//     // Deep copy facilities
-//     for (auto facility : other.facilities) {
-//         facilities.push_back(new Facility(*facility));
-//     }
-
-//     // Deep copy under-construction facilities
-//     for (auto facility : other.underConstruction) {
-//         underConstruction.push_back(new Facility(*facility));
-//     }
-
 //     return *this;
 // }
 
 Plan::~Plan() {
     delete selectionPolicy; ///remember
-    for (auto facility : facilities) {
+    for (auto *facility : facilities) {
         delete facility;
     }
-    for (auto facility : underConstruction) {
+    for (auto *facility : underConstruction) {
         delete facility;
     }
 }
