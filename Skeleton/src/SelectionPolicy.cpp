@@ -1,30 +1,30 @@
 #include "SelectionPolicy.h"
-#include <algorithm>
-#include <climits>
-#include <stdexcept> 
-#include <iostream>
-#include <fstream>
-using namespace std;
+
+// No rule of 3 needed in any
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************ NaiveSelection **************************************************** //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Constructor: Initializes the NaiveSelection with no previous selection
 NaiveSelection::NaiveSelection() : lastSelectedIndex(-1) {}
 
+// Selects the next facility one by one
 const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
     if (facilitiesOptions.empty()) {
-        throw std::runtime_error("No facilities available to select");
+        throw runtime_error("No facilities available to select");
     }
 
     lastSelectedIndex = (lastSelectedIndex + 1) % facilitiesOptions.size();
     return facilitiesOptions[lastSelectedIndex];
 }
 
+// Returns the string representation of NaiveSelection
 const string NaiveSelection::toString() const {
     return "nve";
 }
 
+// Clone
 NaiveSelection* NaiveSelection::clone() const {
     return new NaiveSelection(*this);
 }
@@ -33,9 +33,11 @@ NaiveSelection* NaiveSelection::clone() const {
 // ********************************************** BalancedSelection *************************************************** //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Constructor: Initializes BalancedSelection with current scores
 BalancedSelection::BalancedSelection(int lifeQualityScore, int economyScore, int environmentScore)
     : LifeQualityScore(lifeQualityScore), EconomyScore(economyScore), EnvironmentScore(environmentScore) {}
 
+// Selects the facility with the most balanced scores (smallest range between scores)
 const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
     const FacilityType* bestFacility = nullptr;
     int smallestRange = INT_MAX; 
@@ -45,8 +47,9 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
         int adjustedEconomy = facility.getEconomyScore() + EconomyScore;
         int adjustedEnvironment = facility.getEnvironmentScore() + EnvironmentScore;
 
-        int maxScore = std::max({adjustedLifeQuality, adjustedEconomy, adjustedEnvironment});
-        int minScore = std::min({adjustedLifeQuality, adjustedEconomy, adjustedEnvironment});
+        // Calculate the range between max and min scores
+        int maxScore = max({adjustedLifeQuality, adjustedEconomy, adjustedEnvironment});
+        int minScore = min({adjustedLifeQuality, adjustedEconomy, adjustedEnvironment});
         int range = maxScore - minScore;
 
         if (range < smallestRange) {
@@ -55,6 +58,7 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
         }
     }
     
+    // Update the accumulated scores
     LifeQualityScore += bestFacility->getLifeQualityScore();
     EconomyScore += bestFacility->getEconomyScore();
     EnvironmentScore += bestFacility->getEnvironmentScore();
@@ -62,10 +66,12 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
     return *bestFacility;
 }
 
+// Returns the string representation of BalancedSelection
 const string BalancedSelection::toString() const {
     return "bal";
 }
 
+// Clone
 BalancedSelection* BalancedSelection::clone() const {
     return new BalancedSelection(*this);
 }
@@ -75,8 +81,10 @@ BalancedSelection* BalancedSelection::clone() const {
 // ********************************************** EconomySelection **************************************************** //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Constructor: Initializes EconomySelection with no previous selection
 EconomySelection::EconomySelection() : lastSelectedIndex(-1) {}
 
+// Selects the next facility with an ECONOMY category
 const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
     for (size_t i = 1; i <= facilitiesOptions.size(); i++) {
         size_t curr = (lastSelectedIndex + i) % facilitiesOptions.size(); 
@@ -85,13 +93,15 @@ const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>&
             return facilitiesOptions[curr]; 
         }
     }
-    throw std::runtime_error("No suitable facility found for EconomySelection");
+    throw runtime_error("No suitable facility found for EconomySelection");
 }
 
+// Returns the string representation of EconomySelection
 const string EconomySelection::toString() const {
     return "eco";
 }
 
+// Clone
 EconomySelection* EconomySelection::clone() const {
     return new EconomySelection(*this);
 }
@@ -101,8 +111,10 @@ EconomySelection* EconomySelection::clone() const {
 // ******************************************* SustainabilitySelection ************************************************ //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Constructor: Initializes SustainabilitySelection with no previous selection
 SustainabilitySelection::SustainabilitySelection() : lastSelectedIndex(-1) {}
 
+// Selects the next facility with an ENVIRONMENT category
 const FacilityType& SustainabilitySelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
     for (size_t i = 1; i <= facilitiesOptions.size(); i++) {
         size_t curr = (lastSelectedIndex + i) % facilitiesOptions.size(); 
@@ -111,13 +123,15 @@ const FacilityType& SustainabilitySelection::selectFacility(const vector<Facilit
             return facilitiesOptions[curr]; 
         }
     }
-    throw std::runtime_error("No suitable facility found for SustainabilitySelection");
+    throw runtime_error("No suitable facility found for SustainabilitySelection");
 }
 
+// Returns the string representation of SustainabilitySelection
 const string SustainabilitySelection::toString() const {
     return "sus";
 }
 
+// Clone
 SustainabilitySelection* SustainabilitySelection::clone() const {
     return new SustainabilitySelection(*this);
 }

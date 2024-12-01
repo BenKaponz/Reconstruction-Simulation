@@ -1,6 +1,13 @@
 #pragma once
 #include <vector>
 #include "Facility.h"
+#include <algorithm>
+#include <climits>
+#include <stdexcept> 
+#include <iostream>
+#include <fstream>
+
+using namespace std;
 using std::vector;
 
 class SelectionPolicy {

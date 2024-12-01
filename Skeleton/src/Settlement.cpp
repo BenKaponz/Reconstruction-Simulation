@@ -1,21 +1,23 @@
 #include "Settlement.h"
-#include <iostream>
-using std::string;
-using std::vector;
 
+// No rule of 3 needed here
 
+// Constructor
 Settlement::Settlement(const string &name, SettlementType type)
     : name(name), type(type) {
 }
 
+// SettlementType getter
 SettlementType Settlement::getType() const{
     return type;
 }
 
+// Name getter
 const string &Settlement::getName() const{
     return name;
 }
 
+// Converts the settlement's data to a readable string
 const string Settlement::toString() const{
     string typeStr;
     switch (type) {

@@ -1,7 +1,19 @@
 #pragma once
+#include "Simulation.h"
+#include "Auxiliary.h"
+#include "Settlement.h"
+#include "Facility.h"
+#include "SelectionPolicy.h"
+#include "Plan.h"
+
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
-#include "Simulation.h"
+
+using namespace std;
+
 enum class SettlementType;
 enum class FacilityCategory;
 

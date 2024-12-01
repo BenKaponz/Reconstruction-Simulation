@@ -1,8 +1,11 @@
 #pragma once
 #include <string>
 #include <vector>
+
 using std::string;
 using std::vector;
+using namespace std;
+
 
 enum class FacilityStatus {
     UNDER_CONSTRUCTIONS,
@@ -44,9 +47,9 @@ class Facility: public FacilityType {
         Facility(const FacilityType &type, const string &settlementName);
         const string &getSettlementName() const;
         const int getTimeLeft() const;
-        FacilityStatus step();
-        void setStatus(FacilityStatus status);
         const FacilityStatus& getStatus() const;
+        void setStatus(FacilityStatus status);
+        FacilityStatus step();
         const string toString() const;
 
     private:

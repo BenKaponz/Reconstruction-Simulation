@@ -1,8 +1,13 @@
 #pragma once
-#include <vector>
 #include "Facility.h"
 #include "Settlement.h"
 #include "SelectionPolicy.h"
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
 using std::vector;
 
 enum class PlanStatus {
@@ -24,16 +29,17 @@ class Plan {
         const int getEconomyScore() const;
         const int getEnvironmentScore() const;
         SelectionPolicy* getSelectionPolicy() const; 
+        const vector<Facility*> &getFacilities() const;
+        const vector<Facility *> &getFacilitiesUnderConstruction() const;
         void setSelectionPolicy(SelectionPolicy *selectionPolicy);
         void step();
-        void printStatus();
-        const vector<Facility*> &getFacilities() const;
         void addFacility(Facility* facility);
+        void printStatus();
         const string toString() const;
 
     private:
         int plan_id;
-        const Settlement *settlement;
+        const Settlement &settlement;
         SelectionPolicy *selectionPolicy; //What happens if we change this to a reference?
         PlanStatus status;
         vector<Facility*> facilities;
