@@ -100,7 +100,7 @@ void Plan::setSelectionPolicy(SelectionPolicy *newSelectionPolicy) {
     if (selectionPolicy) {
         delete selectionPolicy;  // Clean up old policy
     }
-    selectionPolicy = newSelectionPolicy->clone();  // Clone the new policy
+    selectionPolicy = newSelectionPolicy; 
 }
 
 void Plan::step() {

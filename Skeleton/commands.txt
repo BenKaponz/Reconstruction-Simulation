@@ -1,15 +1,21 @@
 step 1
-planStatus:0
-planStatus:1
-settlement anotherVillage 0
+planStatus 0
+planStatus 1
+settlement NewVillage 0
+settlement NewCity 1
+settlement NewMetropolis 2
 backup
-log
-plan anotherVillage bal
-planStatus:2
+plan NewVillage sus
+plan NewCity eco
+plan NewMetropolis bal
 restore
-planStatus:2
-facility road 1 2 1 1 1
-plan anotherVillage bal
-step 2
-planStatus:2
+changePolicy 0 bal
+changePolicy 1 sus
+changePolicy 2 eco
+step 3
+planStatus 0
+planStatus 1
+planStatus 2
+planStatus 3
+facility WildlifeReserve 2 6 2 1 5
 close
