@@ -26,7 +26,7 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false), planCou
         // Handle "settlement" configuration
         if (args[0] == "settlement") {
             if (args.size() != 3) throw runtime_error("Invalid settlement configuration");
-            if(isSettlementExists(args[1])){
+            if(!isSettlementExists(args[1])){
                 SettlementType type = static_cast<SettlementType>(stoi(args[2]));
                 addSettlement(new Settlement(args[1], type));
             }
