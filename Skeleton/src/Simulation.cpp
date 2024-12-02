@@ -26,10 +26,10 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false), planCou
         // Handle "settlement" configuration
         if (args[0] == "settlement") {
             if (args.size() != 3) throw runtime_error("Invalid settlement configuration");
-            if(isSettlementExists(args[0])){
-            SettlementType type = static_cast<SettlementType>(stoi(args[2]));
-            addSettlement(new Settlement(args[1], type));
-        }
+            if(isSettlementExists(args[1])){
+                SettlementType type = static_cast<SettlementType>(stoi(args[2]));
+                addSettlement(new Settlement(args[1], type));
+            }
         // Handle "facility" configuration
         } else if (args[0] == "facility") {
             if (args.size() != 7) throw runtime_error("Invalid facility configuration");
@@ -37,7 +37,7 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false), planCou
                 FacilityCategory category = static_cast<FacilityCategory>(stoi(args[2]));
                 FacilityType facility(args[1], category, stoi(args[3]), stoi(args[4]), stoi(args[5]), stoi(args[6]));
                 addFacility(facility);
-        }
+            }
         // Handle "plan" configuration
         } else if (args[0] == "plan") {
             if (args.size() != 3) throw runtime_error("Invalid plan configuration");
