@@ -1,10 +1,10 @@
 # All Targets
-all: program
+all: simulation
 
 # Tool invocations
-# Executable "program" depends on the object files main.o, Settlement.o, Facility.o, Plan.o, SelectionPolicy.o, Auxiliary.o, Simulation.o, and Action.o.
-program: bin/main.o bin/Settlement.o bin/Facility.o bin/Plan.o bin/SelectionPolicy.o bin/Auxiliary.o bin/Simulation.o bin/Action.o
-	g++ -o bin/program bin/main.o bin/Settlement.o bin/Facility.o bin/Plan.o bin/SelectionPolicy.o bin/Auxiliary.o bin/Simulation.o bin/Action.o
+# Executable "simulation" depends on the object files main.o, Settlement.o, Facility.o, Plan.o, SelectionPolicy.o, Auxiliary.o, Simulation.o, and Action.o.
+simulation: bin/main.o bin/Settlement.o bin/Facility.o bin/Plan.o bin/SelectionPolicy.o bin/Auxiliary.o bin/Simulation.o bin/Action.o
+	g++ -o bin/simulation bin/main.o bin/Settlement.o bin/Facility.o bin/Plan.o bin/SelectionPolicy.o bin/Auxiliary.o bin/Simulation.o bin/Action.o
 
 # Compile main.cpp into an object file
 bin/main.o: src/main.cpp
