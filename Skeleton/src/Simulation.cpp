@@ -361,7 +361,7 @@ void Simulation::step() {
     }
 }
 
-// Print results of all plans and stop the simulation.
+// Print results of all plans and stop the simulation
 void Simulation::close() {
     for (const auto& plan : plans) {
         cout << "PlanID: " << plan.getPlanId() << "\n";
