@@ -378,7 +378,7 @@ void Simulation::close() {
     cout << "Simulation closed successfully." << endl;
 }
 
-// Start the simulation.
+// Start the simulation
 void Simulation::open() {
     isRunning = true;
     cout << "The simulation has started" << endl;
