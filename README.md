@@ -231,8 +231,6 @@ Ensure compilation includes the following flags:
 - **Course:** SPL – Systems Programming Lab  
 - **Institution:** Ben-Gurion University of the Negev  
 - **Year:** 2025  
-- **Instructor:** Gil Einziger  
-- **TAs:** Nir Sorani  
 - **Environment:** Linux CS Lab, Docker-compatible
 
 ---
