@@ -228,7 +228,7 @@ Ensure compilation includes the following flags:
 ---
 
 ## 📚 Course Information
-- **Course:** SPL – Systems Programming Lab  
+- **Course:** SPL – Systems Programming   
 - **Institution:** Ben-Gurion University of the Negev  
 - **Year:** 2025  
 - **Environment:** Linux CS Lab, Docker-compatible
