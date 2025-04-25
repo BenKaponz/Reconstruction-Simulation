@@ -1,7 +1,7 @@
 # 🏗️ Reconstruction Simulation
 **C++ OOP Simulation – SPL 2025 @ BGU**
 
-A modular and extensible C++ simulation designed to model strategic recovery planning in post-war SPLand. Developed as part of the **Systems Programming Lab (SPL)** course at Ben-Gurion University, the system simulates settlements, facilities, and development plans using object-oriented principles and strategic selection policies.
+A modular and extensible C++ simulation designed to model strategic recovery planning in post-war SPLand. Developed as part of the **Systems Programming (SPL)** course at Ben-Gurion University, the system simulates settlements, facilities, and development plans using object-oriented principles and strategic selection policies.
 
 ---
 
